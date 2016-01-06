@@ -181,7 +181,7 @@ a {
                   </div>
                   <div class="block-content">
                     <ul>
-                      <li><a href="/customer/account/">Account Dashboard</a></li>
+                      <li><a href="/customer/account/${EntityID}">Account Dashboard</a></li>
                       <li><a href="/customer/account/edit">Account Information</a></li>
                       <li><a href="/customer/account/address">Address Book</a></li>
                       <li class="current"><strong>My Orders</strong></li>
@@ -250,7 +250,7 @@ a {
                             <td>${item.shipingName}</td>
                             <td><span class="price">${item.total}</span></td>
                             <td><em>${item.status}</em></td>
-                            <td class="a-center last"><span><a ng-click="cancel(${item.id})" href="" class="link-reorder">Cancle</a> </span></td>
+                            <td class="a-center last"><span><a ng-click="cancel(${EntityID},${item.id})" href="" class="link-reorder">Cancle</a> </span></td>
                         </tr>
                       </c:forEach>
                     </tbody>

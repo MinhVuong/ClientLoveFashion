@@ -89,6 +89,10 @@
 <script type="text/javascript" src="/resources/js/bundle.js"></script>
 <script type="text/javascript" src="/resources/js/cartpro/effects.js"></script>
 <script type="text/javascript" src="/resources/js/msrp.js"></script>
+
+<script src="/resources/js/angular.min.js"></script>
+<script src="/resources/js/app-address-new.js"></script>
+
 <style>
 @font-face {
 	font-family: "Roboto Condensed Regular";
@@ -155,7 +159,7 @@ a {
 	});
 </script>
 </head>
-<body id="bd" class="sm_lovefashion">
+<body id="bd" class="sm_lovefashion" ng-app="NewAddress" ng-controller="NewAddress">
   <div id="yt_wrapper">
     <!-- BEGIN: Header -->
     <jsp:include page="header.jsp"></jsp:include>
@@ -178,7 +182,7 @@ a {
                   </div>
                   <div class="block-content">
                     <ul>
-                      <li><a href="/customer/account/">Account Dashboard</a></li>
+                      <li><a href="/customer/account/${EntityID}">Account Dashboard</a></li>
                       <li><a href="/customer/account/edit">Account Information</a></li>
                       <li class="current"><strong>Address Book</strong></li>
                       <li><a href="/customer/account/myorder">My Orders</a></li>
@@ -196,10 +200,11 @@ a {
                     <p>This is a demo store. Any orders placed through this store will not be honored or fulfilled.</p>
                   </div>
                 </div>
-                <div class="my-account">
+                <div class="my-account" >
                   <div class="page-title block-title title-create-address">
                     <h1>Add New Address</h1>
                   </div>
+                  
                   <form:form action="/customer/account/address/new" method="post" id="form-validate" commandName="address">
                     <div class="fieldset">
                       <h2 class="legend">Contact Information</h2>
@@ -209,7 +214,7 @@ a {
                             <div class="field name-firstname col-md-6">
                               <label for="firstname" class="required"><em>*</em>First Name</label>
                               <div class="input-box">
-                                <form:input path="firstName" value="${sessionScope.customer.firstname}" title="First Name" maxlength="255" class="input-text required-entry" />
+                                <form:input path="firstName" ng-model="firstName" ng-init="firstName='${sessionScope.customer.firstname}'" title="First Name" maxlength="255" class="input-text required-entry" />
                               </div>
                             </div>
                           </div>
@@ -217,7 +222,7 @@ a {
                             <div class="field name-firstname col-md-6">
                               <label for="lastname" class="required"><em>*</em>Last Name</label>
                               <div class="input-box">
-                                <form:input path="lastName" value="${sessionScope.customer.lastname}" title="Last Name" maxlength="255" class="input-text required-entry" />
+                                <form:input path="lastName" ng-model="lastName" ng-init="lastName='${sessionScope.customer.lastname}'"  title="Last Name" maxlength="255" class="input-text required-entry" />
                               </div>
                             </div>
                           </div>
@@ -225,7 +230,7 @@ a {
                             <div class="field name-firstname col-md-6">
                               <label for="telephone" class="required"><em>*</em>Telephone</label>
                               <div class="input-box">
-                                <form:input path="telephone" title="Telephone" class="input-text required-entry" />
+                                <form:input path="telephone" ng-model="telephone" title="Telephone" class="input-text required-entry" />
                               </div>
                             </div>
                           </div>
@@ -237,14 +242,14 @@ a {
                       <ul class="form-list edit-address-form">
                         <li class="wide"><label for="street_1" class="required"><em>*</em>Street Address</label>
                           <div class="input-box">
-                            <form:input path="street" title="Street" class="input-text required-entry" />
+                            <form:input path="street" ng-model="street" title="Street" class="input-text required-entry" />
                           </div></li>
                         <li class="fields">
                           <div class="row">
                             <div class="field col-md-6">
                               <label for="region_id" class="required"><em>*</em>State/Province</label>
                               <div class="input-box">
-                                <form:select path="regionId" class="validate-select required-entry">
+                                <form:select  path="regionId" ng-model="regionId" class="validate-select required-entry">
                                   <form:option value="" label="Please select region, state or province" />
                                   <form:options items="${regionList}" />
                                 </form:select>
@@ -253,7 +258,7 @@ a {
                             <div class="field col-md-6">
                               <label for="country" class="required"><em>*</em>Country</label>
                               <div class="input-box">
-                                <form:select path="countryId" class="validate-select required-entry" defaultvalue="0">
+                                <form:select path="countryId" ng-model="countryId" class="validate-select required-entry" defaultvalue="0">
                                   <form:option value="" label="Please select region, state or province" />
                                   <form:options items="${countryList}" />
                                 </form:select>
@@ -263,9 +268,9 @@ a {
                         </li>
                         <li class="fields">
                           <div class="row">
-                            <li class="control"><form:checkbox path="defaultBillingAddress" title="Use as My Default Billing Address" class="checkbox" /> <label for="primary_billing">Use
+                            <li class="control"><form:checkbox path="defaultBillingAddress" ng-model="bill" title="Use as My Default Billing Address" class="checkbox" /> <label for="primary_billing">Use
                                 as my default billing address</label></li>
-                            <li class="control"><form:checkbox path="defaultShippingAddress" title="Use as My Default Shipping Address" class="checkbox" /> <label for="primary_shipping">Use
+                            <li class="control"><form:checkbox path="defaultShippingAddress" ng-model="ship" title="Use as My Default Shipping Address" class="checkbox" /> <label for="primary_shipping">Use
                                 as my default shipping address</label></li>
                           </div>
                         </li>
@@ -276,11 +281,12 @@ a {
                       <p class="back-link">
                         <a href="/customer/account/address"><small>« </small>Back</a>
                       </p>
-                      <button type="submit" title="Save Address" class="button">
+                      <button type="button" ng-click="submit(${EntityID})" title="Save Address" class="button">
                         <span><span>Save Address</span></span>
                       </button>
                     </div>
                   </form:form>
+                  
                 </div>
               </div>
             </div>

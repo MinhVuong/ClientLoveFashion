@@ -53,10 +53,13 @@ import com.example.dto.RegisterModel;
 import com.example.dto.UpdateAccount;
 import com.example.entity.CustomerAddressEntity;
 import com.example.entity.CustomerEntity;
+import com.example.entity.CustomerGroup;
 import com.example.entity.EmailTemplate;
 import com.example.entity.SalesOrder;
 import com.example.entity.VerificationToken;
 import com.example.event.OnRegistrationCompleteEvent;
+import com.example.modelAPI.CustomerAPI;
+import com.example.modelAPI.CustomerAddressAPI;
 import com.example.modelAPI.ListOrderAPI;
 import com.example.modelAPI.ShowAddress;
 import com.example.modelAPI.ShowDashBoard;
@@ -98,26 +101,34 @@ public class CustomerController {
 	public String showDashboard(@PathVariable("id") int id, Model model, HttpSession session) {
 		
 		RestTemplate restTemplate = new RestTemplate();
-		
-		
 		ResponseEntity<ShowDashBoard> response = restTemplate.getForEntity("http://localhost:8080/api/customer/"+ id, ShowDashBoard.class);
 		
 		if(response.getStatusCode() == HttpStatus.OK)
 		{
 			
-			CustomerAddressEntity bill = response.getBody().getDefaultBilling();
-			CustomerAddressEntity ship = response.getBody().getDefaultShipping();
-			
+			CustomerAddressAPI bill = response.getBody().getDefaultBilling();
+			CustomerAddressAPI ship = response.getBody().getDefaultShipping();
+			CustomerAPI cusAPI = response.getBody().getCustomer();
+			CustomerEntity customer = ChangeCustomerAPIToEntity(cusAPI);
 			model.addAttribute("defaultBilling", bill);
 			model.addAttribute("defaultShipping",ship);
+			model.addAttribute("customer", customer);
 			
-			
-			model.addAttribute("customer", response.getBody().getCustomer());
 			return "dashboard";
 		}
 		return "redirect:/customer/account/login";
-				
-		
+	}
+	protected CustomerEntity ChangeCustomerAPIToEntity(CustomerAPI api)
+	{
+		CustomerEntity entity = new CustomerEntity();
+		entity.setEntityId(api.getEntityId());
+		entity.setEmail(api.getEmail());
+		entity.setFirstname(api.getFirstname());
+		entity.setLastname(api.getLastname());
+		entity.setGender(api.getGender());
+		entity.setScore(api.getScore());
+		entity.setPassword(api.getPassword());
+		return entity;
 	}
 
 	@RequestMapping(value = "/loginFB", method = RequestMethod.GET)
@@ -387,11 +398,14 @@ public class CustomerController {
 			@RequestParam(value = "changePassword", required = false) Integer changePassword) {
 		CustomerEntity customer = (CustomerEntity) session
 				.getAttribute("customer");
+		
+		int id = customer.getEntityId();
 		if (customer != null) {
 			UpdateAccount update = new UpdateAccount();
 			if (changePassword != null)
 				update.setChangePassword(true);
 			model.addAttribute("update", update);
+			model.addAttribute("EntityID", id);
 			return "update-account";
 		}
 		return "redirect:/customer/account/login";
@@ -447,14 +461,15 @@ public class CustomerController {
 			showAddress = (ShowAddress)response.getBody();
 		}
 		if (showAddress != null) {
-			CustomerAddressEntity defaultBilling = showAddress.getDefaultBilling();
-			CustomerAddressEntity defaultShipping = showAddress.getDefaultShipping();
+			CustomerAddressAPI defaultBilling = showAddress.getDefaultBilling();
+			CustomerAddressAPI defaultShipping = showAddress.getDefaultShipping();
 			
-			List<CustomerAddressEntity> listAddress = showAddress.getListAddress();
+			List<CustomerAddressAPI> listAddress = showAddress.getListAddress();
 			
 			model.addAttribute("defaultBilling", defaultBilling);
 			model.addAttribute("defaultShipping", defaultShipping);
 			model.addAttribute("listAddress", listAddress);
+			model.addAttribute("EntityID", id);
 			return "address";
 		} else {
 			return "redirect:/customer/account/login";
@@ -475,6 +490,9 @@ public class CustomerController {
 			model.addAttribute("address", new AddressAccount());
 			model.addAttribute("countryList", countryList);
 			model.addAttribute("regionList", regionList);
+			
+			int id = customer.getEntityId();
+			model.addAttribute("EntityID", id);
 			return "update-address";
 		} else {
 			return "redirect:/customer/account/login";
@@ -488,8 +506,7 @@ public class CustomerController {
 		if (result.hasErrors()) {
 			return "update-address";
 		} else {
-			CustomerEntity customer = (CustomerEntity) session
-					.getAttribute("customer");
+			CustomerEntity customer = customerService.getCustomerId(1);
 			if (customer != null) {
 				address.setRegion(regionList.get(address.getRegionId()));
 				address.setCountry(countryList.get(address.getCountryId()));
@@ -697,12 +714,13 @@ public class CustomerController {
 		{
 			list = (ListOrderAPI)response.getBody();
 			model.addAttribute("orders", list.getListOder());
+			model.addAttribute("EntityID", id);
 			return "myorders";
 		}
 		return "redirect:/customer/account/login";
 		
 	}
-
+/*
 	@RequestMapping(value = "/myorder/cancle/{id}", method = RequestMethod.GET)
 	public String cancleOrder(Model model, HttpSession session,
 			@PathVariable("id") int id) {
@@ -728,7 +746,7 @@ public class CustomerController {
 		} else {
 			return "redirect:/customer/account/login";
 		}
-	}
+	} */
 
 	private SimpleMailMessage constructCancleOrdersEmail(
 			CustomerEntity customer, int id) {

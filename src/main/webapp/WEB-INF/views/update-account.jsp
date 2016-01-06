@@ -177,7 +177,7 @@ a {
                   </div>
                   <div class="block-content">
                     <ul>
-                      <li><a href="/customer/account/">Account Dashboard</a></li>
+                      <li><a href="/customer/account/${EntityID}">Account Dashboard</a></li>
                       <li class="current"><strong>Account Information</strong></li>
                       <li><a href="/customer/account/address">Address Book</a></li>
                       <li><a href="/customer/account/myorder">My Orders</a></li>

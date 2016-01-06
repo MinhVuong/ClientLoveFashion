@@ -1,5 +1,7 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+
 <div id="yt_header" class="yt-header  wrap">
   <div class="header-style-default">
     <div class="header-top">

@@ -1,8 +1,9 @@
-var myApp = angular.module("Customer", []);
+var myApp = angular.module("Header", []);
 
-myApp.controller("loginCtrl", function($scope, $http, $location){
+myApp.controller("Login", function($scope, $http, $location){
 
-	$scope.login = function() {
+	$scope.submit = function() {
+		alert("submit");
 		var user ={ "email":$scope.email,
             	"password":$scope.password};
 		var res = $http.post('http://localhost:8080/api/customer/login', user);
@@ -14,8 +15,11 @@ myApp.controller("loginCtrl", function($scope, $http, $location){
 			
 		});
 		res.error(function(data, status, headers, config) {
-			alert(status);
+			if(status == 400){
+				alert("Mssv exists in database");
+			}
 		});	
+		
 		
     };
     

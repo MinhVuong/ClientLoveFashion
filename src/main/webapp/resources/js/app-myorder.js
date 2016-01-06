@@ -2,38 +2,27 @@ var myApp = angular.module("MyOrder", []);
 
 myApp.controller("MyOrder", function($scope, $http, $location){
 
-	$scope.cancel = function(x){
-		alert(x);
-	}
-	$scope.submit = function() {
-		if($scope.firstName==null || $scope.firstName=="")
-		{
-			alert("First Name Null!");
-		}else if($scope.lastName==null || $scope.lastName==""){
-			alert("Last Name Null!");
-		} else if($scope.email==null || $scope.email==""){
-			alert("Email Null!");
-		} else if($scope.password==null || $scope.password==""){
-			alert("Password Null!");
-		}else if($scope.password.length < 6){
-			alert("Length Password less 6 chars");
-		}else if($scope.confirmPassword!=$scope.password){
-			alert("Password didn't machecd");
-		}else{
-			var registerMode = {
-					"email": $scope.email,
-					  "firstName": $scope.firstName,
-					  "lastName": $scope.lastName,
-					  "password": $scope.password,
-					  "confirmPassword": null
-					};
-			var res = $http.post('', registerMode);
+	$scope.cancel = function(id, index){
+		
+		
+		var res = $http.get('http://localhost:8080/api/customer/myorder/cancle/'+id+','+index);
+		res.success(function(data, status, headers, config) {
+			if(status==200)
+			{
+				 alert("Orders has been canceled.");
+				 window.location.href = "http://localhost:8081/customer/account/myorder" ;
+			}
+		});
+		res.error(function(data, status, headers, config) {
+			if(status=504)
+			{
+				alert("Your order has placed more than 3 hours should not be canceled.");
+			}else
+				alert("Bad Request!");
 			
-				
-		}
-		
-		
-    };
-    
+			
+		});	
+	}
+
     
 });
