@@ -89,6 +89,10 @@
 <script type="text/javascript" src="/resources/js/bundle.js"></script>
 <script type="text/javascript" src="/resources/js/cartpro/effects.js"></script>
 <script type="text/javascript" src="/resources/js/msrp.js"></script>
+
+<script src="/resources/js/angular.min.js"></script>
+<script src="/resources/js/app-update-account.js"></script>
+
 <style>
 @font-face {
 	font-family: "Roboto Condensed Regular";
@@ -204,6 +208,7 @@ a {
                         </ul></li>
                     </ul>
                   </c:if>
+                  <div ng-app="UpdateAccount" ng-controller="submit">
                   <form:form action="/customer/account/edit" method="post" id="form-validate" autocomplete="off" commandName="update">
                     <div class="row edit-account-form">
                       <div class="fieldset col-md-6">
@@ -214,22 +219,22 @@ a {
                               <div class="field name-firstname col-md-6">
                                 <label for="firstname" class="required"><em>*</em>First Name</label>
                                 <div class="input-box">
-                                  <form:input path="firstName" value="${sessionScope.customer.firstname}" title="First Name" maxlength="255" class="input-text required-entry" />
+                                  <form:input path="firstName" ng-model="firstName" ng-init="firstName='${sessionScope.customer.firstname}'"  title="First Name" maxlength="255" class="input-text required-entry" />
                                 </div>
                               </div>
                               <div class="field name-lastname col-md-6">
                                 <label for="lastame" class="required"><em>*</em>Last Name</label>
                                 <div class="input-box">
-                                  <form:input path="lastName" value="${sessionScope.customer.lastname}" title="Last Name" maxlength="255" class="input-text required-entry" />
+                                  <form:input path="lastName" ng-model="lastName" ng-init="lastName='${sessionScope.customer.lastname}'" value="${sessionScope.customer.lastname}" title="Last Name" maxlength="255" class="input-text required-entry" />
                                 </div>
                               </div>
                             </div>
                           </li>
                           <li><label for="email" class="required"><em>*</em>Email Address</label>
                             <div class="input-box">
-                              <form:input path="email" value="${sessionScope.customer.email}" title="Email Address" maxlength="255" disabled="true" class="input-text" />
+                              <form:input path="email" ng-model="email" ng-init="email='${sessionScope.customer.email}'" value="${sessionScope.customer.email}" title="Email Address" maxlength="255" disabled="true" class="input-text" />
                             </div></li>
-                          <li class="control"><form:checkbox path="changePassword" onclick="setPasswordForm(this.checked)" title="Change Password" class="checkbox" /> <label
+                          <li class="control"><form:checkbox path="changePassword" ng-model="isChangePassword" onclick="setPasswordForm(this.checked)" title="Change Password" class="checkbox" /> <label
                             for="change_password">Change Password</label></li>
                         </ul>
                       </div>
@@ -240,20 +245,20 @@ a {
                             <div class="input-box">
                               <!-- This is a dummy hidden field to trick firefox from auto filling the password -->
                               <input type="text" class="input-text no-display" name="dummy" id="dummy">
-                              <form:password path="currentPassword" title="Password" class="input-text required-entry validate-password" />
+                              <form:password path="currentPassword" ng-model="currentPassword" title="Password" class="input-text required-entry validate-password" />
                             </div></li>
                           <li class="fields">
                             <div class="row">
                               <div class="field col-md-6">
                                 <label for="password" class="required"><em>*</em>New Password</label>
                                 <div class="input-box">
-                                  <form:password path="password" title="New Password" class="input-text required-entry validate-password" />
+                                  <form:password path="password" ng-model="password" title="New Password" class="input-text required-entry validate-password" />
                                 </div>
                               </div>
                               <div class="field col-md-6">
                                 <label for="confirmation" class="required"><em>*</em>Confirm New Password</label>
                                 <div class="input-box">
-                                  <form:password path="confirmPassword" title="Confirm New Password" class="input-text required-entry validate-cpassword" />
+                                  <form:password path="confirmPassword" ng-model="confirmPassword" title="Confirm New Password" class="input-text required-entry validate-cpassword" />
                                 </div>
                               </div>
                             </div>
@@ -266,11 +271,12 @@ a {
                       <p class="back-link">
                         <a href="/customer/account/"><small>« </small>Back</a>
                       </p>
-                      <button type="submit" title="Save" class="button">
+                      <button type="button" ng-click="submit()" title="Save" class="button">
                         <span><span>Save</span></span>
                       </button>
                     </div>
                   </form:form>
+                </div>		
                 </div>
               </div>
             </div>

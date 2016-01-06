@@ -87,7 +87,7 @@
 <script type="text/javascript" src="/resources/js/msrp.js"></script>
 
 <script src="/resources/js/angular.min.js"></script>
-<script src="/resources/js/app1.js"></script>
+<script src="/resources/js/app-login.js"></script>
 
 
 <style>

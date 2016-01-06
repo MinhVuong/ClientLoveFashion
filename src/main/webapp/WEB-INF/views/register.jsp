@@ -92,6 +92,9 @@
 <script type="text/javascript" src="/resources/js/cartpro/effects.js"></script>
 <script type="text/javascript" src="/resources/js/msrp.js"></script>
 
+<script src="/resources/js/angular.min.js"></script>
+<script src="/resources/js/app-register.js"></script>
+
 <style>
 @font-face {
 	font-family: "Roboto Condensed Regular";
@@ -206,6 +209,7 @@ a {
                         </li>
                       </ul>
                     </c:if>
+                    <dir ng-app="Register" ng-controller="submit">
                     <form:form action="/customer/account/register" method="post" id="form-validate" commandName="account">
                       <div class="row">
                         <div class="fieldset col-md-6">
@@ -217,7 +221,7 @@ a {
                                   <div class="field name-firstname col-md-6">
                                     <label for="firstname" class="required"><em>*</em>First Name</label>
                                     <div class="input-box">
-                                      <form:input path="firstName" value="" title="First Name" maxlength="255" class="input-text required-entry" />
+                                      <form:input path="firstName" ng-model="firstName" value="" title="First Name" maxlength="255" class="input-text required-entry" />
                                       <div class="validation-advice">
                                         <form:errors path="firstName" />
                                       </div>
@@ -226,7 +230,7 @@ a {
                                   <div class="field name-lastname col-md-6">
                                     <label for="lastname" class="required"><em>*</em>Last Name</label>
                                     <div class="input-box">
-                                      <form:input path="lastName" value="" title="Last Name" maxlength="255" class="input-text required-entry" />
+                                      <form:input path="lastName" ng-model="lastName" value="" title="Last Name" maxlength="255" class="input-text required-entry" />
                                       <div class="validation-advice">
                                         <form:errors path="lastName" />
                                       </div>
@@ -236,7 +240,7 @@ a {
                               </li>
                               <li><label for="email_address" class="required"><em>*</em>Email Address</label>
                                 <div class="input-box">
-                                  <form:input path="email" value="" title="Email Address" class="input-text validate-email required-entry" />
+                                  <form:input path="email" ng-model="email" value="" title="Email Address" class="input-text validate-email required-entry" />
                                   <div class="validation-advice">
                                     <form:errors path="email" />
                                   </div>
@@ -252,7 +256,7 @@ a {
                                 <div class="field" style="margin-bottom: 5px;">
                                   <label for="password" class="required"><em>*</em>Password</label>
                                   <div class="input-box">
-                                    <form:password path="password" title="Password" class="input-text required-entry validate-password" />
+                                    <form:password path="password" ng-model="password" title="Password" class="input-text required-entry validate-password" />
                                     <div class="validation-advice">
                                       <form:errors path="password" />
                                     </div>
@@ -261,7 +265,7 @@ a {
                                 <div class="field">
                                   <label for="confirmation" class="required"><em>*</em>Confirm Password</label>
                                   <div class="input-box">
-                                    <form:password path="confirmPassword" title="Confirm Password" id="confirmation" class="input-text required-entry validate-cpassword" />
+                                    <form:password path="confirmPassword" ng-model="confirmPassword" title="Confirm Password" id="confirmation" class="input-text required-entry validate-cpassword" />
                                     <div class="validation-advice">
                                       <form:errors path="confirmPassword" />
                                     </div>
@@ -277,11 +281,12 @@ a {
                         <p class="back-link">
                           <a href="/customer/account/login" class="back-link"><small>« </small>Back</a>
                         </p>
-                        <button type="submit" title="Submit" class="button">
+                        <button type="button" ng-click="submit()" title="Submit" class="button">
                           <span><span>Submit</span></span>
                         </button>
                       </div>
                     </form:form>
+                    </dir>
                   </div>
                 </div>
               </div>

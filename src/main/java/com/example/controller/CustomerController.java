@@ -57,6 +57,8 @@ import com.example.entity.EmailTemplate;
 import com.example.entity.SalesOrder;
 import com.example.entity.VerificationToken;
 import com.example.event.OnRegistrationCompleteEvent;
+import com.example.modelAPI.ListOrderAPI;
+import com.example.modelAPI.ShowAddress;
 import com.example.modelAPI.ShowDashBoard;
 import com.example.service.ICustomerService;
 import com.example.service.IEmailTemplateService;
@@ -120,20 +122,11 @@ public class CustomerController {
 
 	@RequestMapping(value = "/loginFB", method = RequestMethod.GET)
 	public String pressbuttonLoginFB(@RequestParam("code") String code, Model model) throws IOException, NoSuchAlgorithmException {
-		// cái này m sẽ zử lý nè.
-		// lam sao lay dc gia tri cua GET ?
-		//vi du /loginFB?code=asakdjs
-		
-		// roi ok, chay di
-		//dc chua
-        
-        System.out.println(code);
-        
+
         String url = "https://accounts.google.com/o/oauth2/token";
 		URL obj = new URL(url);
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
-		//add reuqest header
 		con.setRequestMethod("POST");
 		
 		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
@@ -161,11 +154,7 @@ public class CustomerController {
 			response.append(inputLine);
 		}
 		in.close();
-		
-		//print result
-		//System.out.println(response.toString());
-		 //response 
-		//parse lay ra access _yoken dum t
+
 		JSONParser jsonParser = new JSONParser();
 
 		JSONObject jsonObject;
@@ -179,25 +168,15 @@ public class CustomerController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	    
 		 //Get email 
-		
-		
-		url = "https://www.googleapis.com/oauth2/v1/userinfo?access_token="+access;
-		
+		url = "https://www.googleapis.com/oauth2/v1/userinfo?access_token="+access;	
 		obj = new URL(url);
 		con = (HttpsURLConnection) obj.openConnection();
-
 		// optional default is GET
 		con.setRequestMethod("GET");
-        
-		//add request header
-		
+		//add request header	
 		con.setRequestProperty("Accept-Charset", "UTF-8");
 		responseCode = con.getResponseCode();
-		//System.out.println("\nSending 'GET' request to URL : " + url);
-		//System.out.println("Response Code : " + responseCode);
 		Charset charset = Charset.forName("UTF8");
 		in = new BufferedReader(
 		        new InputStreamReader(con.getInputStream(),charset));
@@ -232,17 +211,11 @@ public class CustomerController {
 			fname = (String) jsonObject.get("family_name");
 			lname = (String) jsonObject.get("given_name");
 			
-			
-            
-			
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println(email.toString());
-		            // get a String from the JSON object
-		//xong
-		//gio setup dum tao cai get use by email di
 		
 		CustomerEntity customer = customerService.findByEmail(email);
 		if (customer == null) {
@@ -260,26 +233,8 @@ public class CustomerController {
 			customer.setLognum((short) (customer.getLognum() + 1));
 			customerService.update(customer);
 			model.addAttribute("customer", customer);
-			//
-			
-			//doan nao set cookie dau?
 			return "redirect:/customer/account/";
 		}
-		            
-
-        
-		
-		//lay code sao
-		//String email = "";// gia su day là email lay tu fb.
-		//CustomerEntity customer = customerService.getCustomer(email, password);	// cai nay can pass. M lamf ham khac k can pass, chi can email thoi, vi fb xac thuc roi.
-		//customer.setLogdate(new Date());
-		//customer.setLognum((short) (customer.getLognum() + 1));
-		//customerService.update(customer);
-		//model.addAttribute("customer", customer);
-	
-		//doan nao set cookie dau?
-		
-		
 	}
 	
 	
@@ -291,9 +246,7 @@ public class CustomerController {
 			return "redirect:/customer/account/";
 		return "login";
 	}
-	///gio 72n tao euc hạy cái kia thử m xem nha
-	// check login nè.
-	//giờ giả sử tao bấm vào nút login facebook. nó sẽ trả vể kết quả ở return_url . làm sao để set là với cái email của facebook đó được phép đăng nhập ?
+	/*
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(@RequestParam("login[username]") String email,
 			@RequestParam("login[password]") String password, Model model,
@@ -334,7 +287,7 @@ public class CustomerController {
 				return "redirect:/customer/account/";
 			}
 		}
-	}
+	}*/
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logout(WebRequest request, SessionStatus status) {
@@ -352,7 +305,7 @@ public class CustomerController {
 		model.addAttribute("account", new RegisterModel());
 		return "register";
 	}
-
+	/*
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String register(
 			@ModelAttribute("account") @Validated RegisterModel account,
@@ -373,7 +326,7 @@ public class CustomerController {
 				return "redirect:/customer/account/login";
 			}
 		}
-	}
+	} */
 
 	private String getBaseUrl(HttpServletRequest request) {
 		if ((request.getServerPort() == 80) || (request.getServerPort() == 443))
@@ -444,6 +397,7 @@ public class CustomerController {
 		return "redirect:/customer/account/login";
 	}
 
+	/*
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public String updateAccount(
 			@ModelAttribute("update") @Validated UpdateAccount account,
@@ -477,29 +431,27 @@ public class CustomerController {
 				return "redirect:/customer/account/login";
 			}
 		}
-	}
+	}	*/
 
 	@RequestMapping(value = "/address", method = RequestMethod.GET)
 	public String showAddress(Model model, HttpSession session) {
 		CustomerEntity customer = (CustomerEntity) session
 				.getAttribute("customer");
-		if (customer != null) {
-			CustomerAddressEntity defaultBilling = null;
-			CustomerAddressEntity defaultShipping = null;
-			if (customer.getDefaultBilling() != null) {
-				defaultBilling = customerService
-						.getCustomerAddress(new Integer(customer
-								.getDefaultBilling()));
-			}
-			if (customer.getDefaultShipping() != null) {
-				defaultShipping = customerService
-						.getCustomerAddress(new Integer(customer
-								.getDefaultShipping()));
-			}
-			List<CustomerAddressEntity> listAddress = customerService
-					.findAdditionalAddress(customer.getEntityId(),
-							customer.getDefaultBilling(),
-							customer.getDefaultShipping());
+		int id = customer.getEntityId();
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<ShowAddress> response = restTemplate.getForEntity("http://localhost:8080/api/customer/address/"+ id, ShowAddress.class);
+		
+		ShowAddress showAddress= new ShowAddress();
+		if(response.getStatusCode() == HttpStatus.OK)
+		{
+			showAddress = (ShowAddress)response.getBody();
+		}
+		if (showAddress != null) {
+			CustomerAddressEntity defaultBilling = showAddress.getDefaultBilling();
+			CustomerAddressEntity defaultShipping = showAddress.getDefaultShipping();
+			
+			List<CustomerAddressEntity> listAddress = showAddress.getListAddress();
+			
 			model.addAttribute("defaultBilling", defaultBilling);
 			model.addAttribute("defaultShipping", defaultShipping);
 			model.addAttribute("listAddress", listAddress);
@@ -736,13 +688,19 @@ public class CustomerController {
 	public String order(Model model, HttpSession session) {
 		CustomerEntity customer = (CustomerEntity) session
 				.getAttribute("customer");
-		if (customer != null) {
-			List<OrderModel> orders = customerService.myOrders(customer);
-			model.addAttribute("orders", orders);
+		int id = customer.getEntityId();
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<ListOrderAPI> response = restTemplate.getForEntity("http://localhost:8080/api/customer/myorder/"+ id, ListOrderAPI.class);
+		
+		ListOrderAPI list= new ListOrderAPI();
+		if(response.getStatusCode() == HttpStatus.OK)
+		{
+			list = (ListOrderAPI)response.getBody();
+			model.addAttribute("orders", list.getListOder());
 			return "myorders";
-		} else {
-			return "redirect:/customer/account/login";
 		}
+		return "redirect:/customer/account/login";
+		
 	}
 
 	@RequestMapping(value = "/myorder/cancle/{id}", method = RequestMethod.GET)

@@ -88,6 +88,9 @@
 <script type="text/javascript" src="/resources/js/bundle.js"></script>
 <script type="text/javascript" src="/resources/js/cartpro/effects.js"></script>
 <script type="text/javascript" src="/resources/js/msrp.js"></script>
+<script src="/resources/js/angular.min.js"></script>
+<script src="/resources/js/app-myorder.js"></script>
+
 <style>
 @font-face {
 	font-family: "Roboto Condensed Regular";
@@ -239,15 +242,15 @@ a {
                         <th>&nbsp;</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody ng-app="MyOrder" ng-controller="MyOrder">
                       <c:forEach var="item" items="${orders}">
                         <tr class="first last odd">
-                            <td>${item.id}</td>
+                            <td ng-model="id" ng-init="id = '${item.id}'">${item.id}</td>
                             <td><span class="nobr">${item.create}</span></td>
                             <td>${item.shipingName}</td>
                             <td><span class="price">${item.total}</span></td>
                             <td><em>${item.status}</em></td>
-                            <td class="a-center last"><span><a href="/customer/account/myorder/cancle/${item.id}" class="link-reorder">Cancle</a> </span></td>
+                            <td class="a-center last"><span><a ng-click="cancel(${item.id})" href="" class="link-reorder">Cancle</a> </span></td>
                         </tr>
                       </c:forEach>
                     </tbody>
